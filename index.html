@@ -13,7 +13,7 @@
     
     <style>
         :root {
-            --primary-dark: #002147; /* Oxford Blue */
+            --primary-dark: #002147;
             --accent-blue: #0056b3;
             --success-green: #1b5e20;
             --warning-orange: #e65100;
@@ -22,22 +22,29 @@
             --text-main: #2c3e50;
         }
 
+        /* NEW: Global reset to ensure padding doesn't break margins */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
         body {
             font-family: 'Inter', sans-serif;
             background-color: #f0f2f5;
             color: var(--text-main);
-            margin: 0;
-            padding: 0;
             line-height: 1.6;
+            overflow-x: hidden; /* Prevents accidental horizontal scrolling */
         }
 
         /* --- Professional Header --- */
         .main-header {
             background: var(--primary-dark);
             color: white;
-            padding: 3rem 1rem 5rem;
+            padding: 4rem 1rem 6rem; /* Slightly more padding for production scale */
             text-align: center;
             border-bottom: 5px solid var(--accent-blue);
+            width: 100%;
         }
 
         .main-header h1 {
@@ -56,9 +63,11 @@
             letter-spacing: 2px;
         }
 
+        /* --- UPDATED CONTAINER --- */
         .container {
-            max-width: 1200px;
-            margin: -30px auto 40px;
+            width: 94%; /* Ensures there is ALWAYS a margin on any screen size */
+            max-width: 1200px; /* Limits the width on large monitors */
+            margin: -60px auto 60px; /* 'auto' centers it horizontally */
             background: white;
             padding: 40px;
             border-radius: 12px;
@@ -84,20 +93,19 @@
         .calc-inputs {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            /* Increased space between input fields */
             gap: 30px 25px; 
         }
 
         .input-group label {
             font-weight: 600;
             font-size: 0.8rem;
-            margin-bottom: 10px; /* More space between label and input */
+            margin-bottom: 10px;
             color: var(--primary-dark);
             display: block;
         }
 
         .input-group input {
-            width: 90%;
+            width: 100%;
             padding: 12px;
             border: 2px solid #e0e0e0;
             border-radius: 6px;
@@ -122,7 +130,7 @@
             font-weight: 700;
             cursor: pointer;
             transition: 0.3s;
-            margin-top: 15px; /* Added space above button */
+            margin-top: 15px;
         }
 
         .calc-button:hover {
@@ -151,6 +159,7 @@
             position: relative;
             height: 450px;
             margin-top: 20px;
+            width: 100%;
         }
 
         /* --- Range Benchmarks Table --- */
@@ -187,6 +196,7 @@
             text-align: center;
             border-top: 1px solid #ddd;
             margin-top: 60px;
+            width: 100%;
         }
 
         .footer-branding h3 {
@@ -201,13 +211,21 @@
             font-size: 1.6rem;
             margin: 0 15px;
             transition: color 0.3s;
+            text-decoration: none;
         }
         .social-links a:hover { color: var(--accent-blue); }
 
+        /* Tablet/Mobile Overrides */
         @media (max-width: 950px) {
             .grid-layout { grid-template-columns: 1fr; }
-            .container { margin-top: -30px; padding: 20px; }
-            .calc-inputs { gap: 20px; } /* Slightly tighter on mobile for better fit */
+            .container { 
+                margin-top: -40px; 
+                padding: 25px; 
+                width: 95%;
+            }
+            .calc-inputs { gap: 20px; }
+            .main-header { padding: 3rem 1rem 5rem; }
+            .hpi-score-display { font-size: 3.5rem; }
         }
     </style>
 </head>
@@ -302,9 +320,9 @@
     </div>
 
     <div class="social-links">
-        <a href="https://yourwebsite.com" target="_blank" title="Personal Website"><i class="fas fa-globe"></i></a>
-        <a href="https://github.com/yourusername" target="_blank" title="GitHub"><i class="fab fa-github"></i></a>
-        <a href="https://linkedin.com/in/yourusername" target="_blank" title="LinkedIn"><i class="fab fa-linkedin"></i></a>
+        <a href="https://amaanullah21.github.io/portfolio/" target="_blank" title="Personal Website"><i class="fas fa-globe"></i></a>
+        <a href="https://github.com/amaanullah21" target="_blank" title="GitHub"><i class="fab fa-github"></i></a>
+        <a href="https://linkedin.com/in/amaanullah-bhatti" target="_blank" title="LinkedIn"><i class="fab fa-linkedin"></i></a>
         <a href="mailto:amaanullahbhatti@outlook.com" title="Email"><i class="fas fa-envelope"></i></a>
     </div>
     
