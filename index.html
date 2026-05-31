@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HPI | Hafzan Prosperity Index Portal</title>
+    
+    <!-- Chart.js for Spider Web Visualization -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Fonts and Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-dark: #002147; /* Oxford Blue */
+            --accent-blue: #0056b3;
+            --success-green: #1b5e20;
+            --warning-orange: #e65100;
+            --danger-red: #b71c1c;
+            --light-bg: #f8f9fa;
+            --text-main: #2c3e50;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f2f5;
+            color: var(--text-main);
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+
+        /* --- Professional Header --- */
+        .main-header {
+            background: var(--primary-dark);
+            color: white;
+            padding: 3rem 1rem 5rem;
+            text-align: center;
+            border-bottom: 5px solid var(--accent-blue);
+        }
+
+        .main-header h1 {
+            font-family: 'Playfair Display', serif;
+            margin: 0;
+            font-size: 2.6rem;
+            letter-spacing: 1px;
+        }
+
+        .main-header p {
+            margin: 10px 0 0;
+            opacity: 0.9;
+            font-weight: 300;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            letter-spacing: 2px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: -30px auto 40px;
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+            position: relative;
+            z-index: 10;
+        }
+
+        .grid-layout {
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap: 50px;
+        }
+
+        /* --- Inputs Section --- */
+        .input-section h3 {
+            color: var(--primary-dark);
+            border-bottom: 2px solid var(--light-bg);
+            padding-bottom: 10px;
+            margin-bottom: 25px;
+        }
+
+        .calc-inputs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            /* Increased space between input fields */
+            gap: 30px 25px; 
+        }
+
+        .input-group label {
+            font-weight: 600;
+            font-size: 0.8rem;
+            margin-bottom: 10px; /* More space between label and input */
+            color: var(--primary-dark);
+            display: block;
+        }
+
+        .input-group input {
+            width: 90%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .input-group input:focus {
+            border-color: var(--accent-blue);
+            outline: none;
+            box-shadow: 0 0 8px rgba(0, 86, 179, 0.1);
+        }
+
+        .calc-button {
+            grid-column: 1 / -1;
+            padding: 18px;
+            background: var(--primary-dark);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-top: 15px; /* Added space above button */
+        }
+
+        .calc-button:hover {
+            background: var(--accent-blue);
+            transform: translateY(-2px);
+        }
+
+        /* --- Visualization Section --- */
+        .results-card {
+            background: var(--light-bg);
+            padding: 30px;
+            border-radius: 12px;
+            text-align: center;
+            border: 1px solid #dee2e6;
+        }
+
+        .hpi-score-display {
+            font-size: 4.5rem;
+            font-weight: 800;
+            color: var(--primary-dark);
+            margin: 10px 0;
+            line-height: 1;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 450px;
+            margin-top: 20px;
+        }
+
+        /* --- Range Benchmarks Table --- */
+        .range-section {
+            margin-top: 50px;
+            padding-top: 30px;
+            border-top: 1px solid #eee;
+        }
+
+        .range-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .range-table th, .range-table td {
+            text-align: left;
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .tag {
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            color: white;
+        }
+
+        /* --- Footer --- */
+        footer {
+            background: white;
+            padding: 50px 20px;
+            text-align: center;
+            border-top: 1px solid #ddd;
+            margin-top: 60px;
+        }
+
+        .footer-branding h3 {
+            font-family: 'Playfair Display', serif;
+            margin: 0;
+            color: var(--primary-dark);
+        }
+
+        .social-links { margin: 25px 0; }
+        .social-links a {
+            color: var(--primary-dark);
+            font-size: 1.6rem;
+            margin: 0 15px;
+            transition: color 0.3s;
+        }
+        .social-links a:hover { color: var(--accent-blue); }
+
+        @media (max-width: 950px) {
+            .grid-layout { grid-template-columns: 1fr; }
+            .container { margin-top: -30px; padding: 20px; }
+            .calc-inputs { gap: 20px; } /* Slightly tighter on mobile for better fit */
+        }
+    </style>
+</head>
+<body>
+
+<header class="main-header">
+    <p>Human-Centered Framework</p>
+    <h1>The Hafzan Prosperity Index (HPI)</h1>
+</header>
+
+<div class="container">
+    <div class="grid-layout">
+        <!-- Left Column: Inputs -->
+        <div class="input-section">
+            <h3>Dimension Analysis (0-100)</h3>
+            <p style="font-size: 0.9rem; color: #666; margin-bottom: 25px;">
+                Input the normalized scores for the ten dimensions of national well-being defined in the HPI framework.
+            </p>
+            
+            <div class="calc-inputs">
+                <div class="input-group"><label>1. Economic Equity & Quality</label><input type="number" id="d1" placeholder="Score 0-100"></div>
+                <div class="input-group"><label>2. Health & Mental Well-being</label><input type="number" id="d2" placeholder="Score 0-100"></div>
+                <div class="input-group"><label>3. Education & Knowledge</label><input type="number" id="d3" placeholder="Score 0-100"></div>
+                <div class="input-group"><label>4. Environmental Resilience</label><input type="number" id="d4" placeholder="Score 0-100"></div>
+                <div class="input-group"><label>5. Governance & Liberties</label><input type="number" id="d5" placeholder="Score 0-100"></div>
+                <div class="input-group"><label>6. Technological Inclusion</label><input type="number" id="d6" placeholder="Score 0-100"></div>
+                <div class="input-group"><label>7. Social Cohesion & Inclusion</label><input type="number" id="d7" placeholder="Score 0-100"></div>
+                <div class="input-group"><label>8. Cultural Flourishing</label><input type="number" id="d8" placeholder="Score 0-100"></div>
+                <div class="input-group"><label>9. Psychological Freedom</label><input type="number" id="d9" placeholder="Score 0-100"></div>
+                <div class="input-group"><label>10. Global Shock Resilience</label><input type="number" id="d10" placeholder="Score 0-100"></div>
+                
+                <button class="calc-button" onclick="calculateHPI()">Run Prosperity Analysis</button>
+            </div>
+        </div>
+
+        <!-- Right Column: Results & Spider Chart -->
+        <div>
+            <div class="results-card">
+                <h3 style="margin: 0; font-size: 1rem; text-transform: uppercase; color: #777;">HPI Aggregate Score</h3>
+                <div id="hpiScore" class="hpi-score-display">0.0</div>
+                <p id="interpretationText" style="font-weight: 600; color: var(--primary-dark);">Enter dimension data to generate visual mapping.</p>
+            </div>
+            
+            <div class="chart-container">
+                <canvas id="hpiChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Benchmark Section -->
+    <div class="range-section">
+        <h3>HPI Benchmark Classifications</h3>
+        <table class="range-table">
+            <thead>
+                <tr style="background: var(--light-bg);">
+                    <th>HPI Score</th>
+                    <th>Classification</th>
+                    <th>Prosperity Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>80.0 – 100.0</strong></td>
+                    <td><span class="tag" style="background: var(--success-green);">Flourishing</span></td>
+                    <td>Exceptional well-being; high equity and resilience across all ten dimensions.</td>
+                </tr>
+                <tr>
+                    <td><strong>60.0 – 79.9</strong></td>
+                    <td><span class="tag" style="background: var(--accent-blue);">Developing</span></td>
+                    <td>Strong foundations with moderate prosperity. Significant growth in human capital.</td>
+                </tr>
+                <tr>
+                    <td><strong>40.0 – 59.9</strong></td>
+                    <td><span class="tag" style="background: var(--warning-orange);">Stagnant</span></td>
+                    <td>Structural gaps present. Basic needs met, but limited cultural or psychological freedom.</td>
+                </tr>
+                <tr>
+                    <td><strong>&lt; 40.0</strong></td>
+                    <td><span class="tag" style="background: var(--danger-red);">Emerging</span></td>
+                    <td>Critical challenges in governance, health, and economic equity. Urgent policy action required.</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<footer class="main-footer">
+    <div class="footer-branding">
+        <p style="margin-bottom: 5px; color: #777; font-size: 0.8rem; text-transform: uppercase;">Principal Researcher</p>
+        <h3>Amaanullah Bhatti (Hafzan Osmanoğlu)</h3>
+        <p style="font-size: 0.85rem; margin-top: 5px;">ORCID: 0009-0000-6922-0739</p>
+    </div>
+
+    <div class="social-links">
+        <a href="https://yourwebsite.com" target="_blank" title="Personal Website"><i class="fas fa-globe"></i></a>
+        <a href="https://github.com/yourusername" target="_blank" title="GitHub"><i class="fab fa-github"></i></a>
+        <a href="https://linkedin.com/in/yourusername" target="_blank" title="LinkedIn"><i class="fab fa-linkedin"></i></a>
+        <a href="mailto:amaanullahbhatti@outlook.com" title="Email"><i class="fas fa-envelope"></i></a>
+    </div>
+    
+    <p style="font-size: 0.7rem; color: #aaa; margin-top: 20px;">
+        © 2025 Hafzan Prosperity Framework. Based on "The Hafzan Prosperity Index (HPI): A Multidimensional Human-Centered Framework."
+    </p>
+</footer>
+
+<script>
+    let hpiChart;
+    const dimensionLabels = [
+        'Econ Equity', 'Health', 'Education', 'Environment', 'Governance',
+        'Technology', 'Social Cohesion', 'Culture', 'Freedom', 'Resilience'
+    ];
+
+    function calculateHPI() {
+        const scores = [];
+        for (let i = 1; i <= 10; i++) {
+            const val = parseFloat(document.getElementById(`d${i}`).value);
+            if (isNaN(val) || val < 0 || val > 100) {
+                alert(`Please enter a valid score (0-100) for Dimension ${i}.`);
+                return;
+            }
+            scores.push(val);
+        }
+
+        const avg = scores.reduce((a, b) => a + b, 0) / 10;
+        
+        // Update UI
+        const scoreEl = document.getElementById('hpiScore');
+        scoreEl.innerText = avg.toFixed(1);
+        
+        // Interpret Result
+        const textEl = document.getElementById('interpretationText');
+        if (avg >= 80) {
+            textEl.innerText = "Classification: Flourishing Society";
+            scoreEl.style.color = "var(--success-green)";
+        } else if (avg >= 60) {
+            textEl.innerText = "Classification: Developing Prosperity";
+            scoreEl.style.color = "var(--accent-blue)";
+        } else if (avg >= 40) {
+            textEl.innerText = "Classification: Stagnant Well-being";
+            scoreEl.style.color = "var(--warning-orange)";
+        } else {
+            textEl.innerText = "Classification: Emerging Resilience";
+            scoreEl.style.color = "var(--danger-red)";
+        }
+
+        updateSpiderChart(scores);
+    }
+
+    function updateSpiderChart(data) {
+        const ctx = document.getElementById('hpiChart').getContext('2d');
+        
+        if (hpiChart) {
+            hpiChart.destroy();
+        }
+
+        hpiChart = new Chart(ctx, {
+            type: 'radar',
+            data: {
+                labels: dimensionLabels,
+                datasets: [{
+                    label: 'National Score',
+                    data: data,
+                    backgroundColor: 'rgba(0, 86, 179, 0.2)',
+                    borderColor: 'rgba(0, 33, 71, 1)',
+                    borderWidth: 3,
+                    pointBackgroundColor: 'rgba(0, 86, 179, 1)',
+                    pointHoverRadius: 6
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    r: {
+                        angleLines: { color: '#e0e0e0' },
+                        grid: { color: '#e0e0e0' },
+                        suggestedMin: 0,
+                        suggestedMax: 100,
+                        ticks: { display: false },
+                        pointLabels: {
+                            font: {
+                                size: 11,
+                                weight: '600',
+                                family: 'Inter'
+                            },
+                            color: '#002147'
+                        }
+                    }
+                },
+                plugins: {
+                    legend: { display: false }
+                }
+            }
+        });
+    }
+
+    // Initialize blank chart on load
+    window.onload = () => updateSpiderChart(Array(10).fill(0));
+</script>
+
+</body>
+</html>
